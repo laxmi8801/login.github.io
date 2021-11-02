@@ -28,7 +28,7 @@ def login(request):
         #     return redirect('login')
 
     else:
-        return render(request,'login.html')    
+        return render(request,'index.html')    
 
 def signup(request):
 
@@ -86,4 +86,4 @@ def update(request,username):
 # def logout(request):
     
 #     auth.logout(request)
-#     return render(request,'login.html')
+#     return render(request,'index.html')
