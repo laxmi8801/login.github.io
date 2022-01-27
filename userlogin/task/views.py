@@ -5,83 +5,103 @@ from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from django.contrib.auth  import authenticate,  login
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie
-from .forms import form
-from task.forms import form
-from .models import Users
+
+from rest_framework import serializers
+from .models import Todo, data
+from .serializer import TodoSerializers, dataSerializers
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 #@csrf_protect
+class Todolist(APIView):
+    def get(self,request):
+        todo = Todo.objects.all()
+        serializer = TodoSerializers(todo,many=True)
+        return Response(serializer.data)
 
-def login(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
+    def post(self):
+        pass
 
-        user = auth.authenticate(email=email,password=password)
+class datalist(APIView):
+    def get(self,request):
+        Data = data.objects.all()
+        serializers = dataSerializers(Data,many = True)
+        return Response(serializers.data)
+
+    def post(self):
+        pass
+
+# def login(request):
+#     if request.method == 'POST':
+#         email = request.POST['email']
+#         password = request.POST['password']
+
+#         user = auth.authenticate(email=email,password=password)
       
-        return redirect("display")
-        # if user is not None:
-        #     print('here')
-        #     auth.login(request, user)
-        #     return redirect("display")
-        # else:
-        #     messages.info(request,'invalid credentials')
-        #     return redirect('login')
+#         return redirect("display")
+#         # if user is not None:
+#         #     print('here')
+#         #     auth.login(request, user)
+#         #     return redirect("display")
+#         # else:
+#         #     messages.info(request,'invalid credentials')
+#         #     return redirect('login')
 
-    else:
-        return render(request,'index.html')    
+#     else:
+#         return render(request,'index.html')    
 
-def signup(request):
+# def signup(request):
 
-    if request.method == 'POST':
-        username = request.POST['username']
-        email = request.POST['email']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        address = request.POST['address']
+#     if request.method == 'POST':
+#         username = request.POST['username']
+#         email = request.POST['email']
+#         password1 = request.POST['password1']
+#         password2 = request.POST['password2']
+#         address = request.POST['address']
         
 
-        if password1==password2:
-            if User.objects.filter(username=username).exists():
-                messages.info(request,'username Taken')
-                return redirect('signup')
-            elif User.objects.filter(email=email).exists():
-                messages.info(request,'Email Taken')
-                return redirect('signup')
-            else:   
-                user = User.objects.create_user(username=username, password=password1, email=email)
-                add_user =  Users.objects.create(address=address,user=user)
-                add_user.save()
-               # user.save()
+#         if password1==password2:
+#             if User.objects.filter(username=username).exists():
+#                 messages.info(request,'username Taken')
+#                 return redirect('signup')
+#             elif User.objects.filter(email=email).exists():
+#                 messages.info(request,'Email Taken')
+#                 return redirect('signup')
+#             else:   
+#                 user = User.objects.create_user(username=username, password=password1, email=email)
+#                 add_user =  Users.objects.create(address=address,user=user)
+#                 add_user.save()
+#                # user.save()
 
-                print('user created')
-                return redirect('display')
+#                 print('user created')
+#                 return redirect('display')
 
-        else:
-            messages.info(request,'password not matching..')    
-            return redirect('signup')
-        return redirect('/')
+#         else:
+#             messages.info(request,'password not matching..')    
+#             return redirect('signup')
+#         return redirect('/')
         
-    else:
-        return render(request,'signup.html')
+#     else:
+#         return render(request,'signup.html')
 
-def display(request):
-    users = Users.objects.all()
+# def display(request):
+#     users = Users.objects.all()
     
-    return render(request,'display.html',{'users':users})
+#     return render(request,'display.html',{'users':users})
 
-def remove(request,username):
-    item = User.objects.get(username=username)
-    item.delete()
-    users = Users.objects.all()
-    return render(request,'display.html',{'users':users})
+# def remove(request,username):
+#     item = User.objects.get(username=username)
+#     item.delete()
+#     users = Users.objects.all()
+#     return render(request,'display.html',{'users':users})
 
-def update(request,username):
-    user = User.objects.get(username=username)
-    forms = form(request.POST or None,instance=user)
-    if forms.is_valid():
-        forms.save()
-        return render(request,'display.html',{'Users':user})
-    return render(request,'display.html',{'Users':user})
+# def update(request,username):
+#     user = User.objects.get(username=username)
+#     forms = form(request.POST or None,instance=user)
+#     if forms.is_valid():
+#         forms.save()
+#         return render(request,'display.html',{'Users':user})
+#     return render(request,'display.html',{'Users':user})
 
 # def logout(request):
     

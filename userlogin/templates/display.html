@@ -1,5 +1,16 @@
 
-<!DOCTYPE html>
+<html>
+  <body>
+    {% csrf_token %}
+    <form action="index" method='post'>
+    <input type="text" name="title" placeholder="title">
+    <input type="text" name="desc" placeholder="desc">
+    <input type="submit">
+    </form>
+  </body>
+</html>
+
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <title>User Details</title>
@@ -46,4 +57,4 @@
   <a href="logout" class="btn btn-info" role="button" style="float: right;">Logout</a>
 {% endblock %}
 </body>
-</html>
+</html> -->
